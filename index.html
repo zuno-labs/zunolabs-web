@@ -18,8 +18,8 @@
       --bg4:     #1C1C24;
       --accent:  #00FFB2;
       --accent2: #00C88A;
-      --adim:    rgba(0,255,178,0.08);
-      --adim2:   rgba(0,255,178,0.18);
+      --adim:    var(--adim);
+      --adim2:   color-mix(in srgb, var(--accent) 18%, transparent);
       --text:    #E8E4DC;
       --text2:   #5A5760;
       --text3:   #28272E;
@@ -70,7 +70,7 @@
     .seal {
       width: 30px; height: 30px;
       background: var(--adim2);
-      border: 1px solid rgba(0,255,178,0.28);
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
       border-radius: 7px;
       display: flex; align-items: center; justify-content: center;
       font-family: var(--kanji);
@@ -102,7 +102,7 @@
 
     .nav-contact {
       padding: 7px 16px;
-      border: 1px solid rgba(0,255,178,0.25);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
       border-radius: 7px;
       color: var(--accent) !important;
       font-size: 12px;
@@ -122,8 +122,8 @@
     .hero-grid {
       position: absolute; inset: 0;
       background-image:
-        linear-gradient(rgba(0,255,178,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,255,178,0.025) 1px, transparent 1px);
+        linear-gradient(color-mix(in srgb, var(--accent) 2.5%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 2.5%, transparent) 1px, transparent 1px);
       background-size: 72px 72px;
       mask-image: radial-gradient(ellipse 90% 90% at 20% 50%, black 20%, transparent 75%);
     }
@@ -131,7 +131,7 @@
     .hero-glow {
       position: absolute;
       width: 800px; height: 800px;
-      background: radial-gradient(circle, rgba(0,255,178,0.07) 0%, transparent 65%);
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 7%, transparent) 0%, transparent 65%);
       top: 50%; left: -10%;
       transform: translateY(-50%);
       pointer-events: none;
@@ -330,7 +330,7 @@
     }
 
     .app-card:hover {
-      border-color: rgba(0,255,178,0.18);
+      border-color: color-mix(in srgb, var(--accent) 18%, transparent);
       transform: translateY(-2px);
     }
 
@@ -339,7 +339,7 @@
       position: absolute;
       top: -80px; right: -80px;
       width: 280px; height: 280px;
-      background: radial-gradient(circle, rgba(0,255,178,0.05) 0%, transparent 70%);
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -388,7 +388,7 @@
     .tag.hi {
       background: var(--adim);
       color: var(--accent);
-      border-color: rgba(0,255,178,0.2);
+      border-color: color-mix(in srgb, var(--accent) 20%, transparent);
     }
 
     .app-actions { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -536,7 +536,7 @@
       gap: 40px;
     }
 
-/*    .footer-left {}   */
+    /*  .footer-left {} */
 
     .footer-brand {
       display: flex; align-items: center; gap: 10px;
@@ -574,6 +574,347 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ── PLANS ── */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 780px;
+    }
+
+    .plan-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+    }
+
+    .plan-card.pro {
+      border-color: color-mix(in srgb, var(--accent) 25%, transparent);
+      background: linear-gradient(135deg, var(--bg2) 0%, color-mix(in srgb, var(--accent) 3%, transparent) 100%);
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -1px; right: 24px;
+      background: var(--accent);
+      color: #060608;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .plan-header { margin-bottom: 28px; }
+
+    .plan-name {
+      font-size: 18px; font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .plan-price {
+      font-size: 32px; font-weight: 700;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .plan-card.pro .plan-price { color: var(--accent); }
+
+    .plan-per { font-size: 15px; font-weight: 400; color: var(--text2); }
+
+    .plan-desc { font-size: 13px; color: var(--text2); font-weight: 300; }
+
+    .plan-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+    .plan-list li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 300;
+    }
+
+    .plan-list li::before {
+      content: '';
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700;
+    }
+
+    .plan-list li.yes { color: var(--text); }
+    .plan-list li.yes::before {
+      background: var(--adim2);
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      content: '✓';
+      color: var(--accent);
+      text-align: center;
+      line-height: 14px;
+    }
+
+    .plan-list li.no { color: var(--text2); }
+    .plan-list li.no::before {
+      background: var(--bg4);
+      border: 1px solid var(--border);
+      content: '–';
+      color: var(--text2);
+      text-align: center;
+      line-height: 14px;
+    }
+
+    /* ── TECH STRIP ── */
+    .tech-strip-wrap {
+      padding: 48px 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tech-strip-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text2);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .tech-track-outer {
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%);
+    }
+
+    .tech-track {
+      display: flex;
+      gap: 0;
+      width: max-content;
+      animation: scroll-tech 28s linear infinite;
+    }
+
+    .tech-track:hover { animation-play-state: paused; }
+
+    .tech-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 36px;
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+      color: var(--text2);
+      font-size: 13px; font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .tech-item:hover { color: var(--text); }
+
+    .tech-item svg { flex-shrink: 0; opacity: 0.7; }
+    .tech-item:hover svg { opacity: 1; }
+
+    @keyframes scroll-tech {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── THEME SWITCHER ── */
+    .theme-btn {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
+      background: conic-gradient(#00FFB2, #A855F7, #FF3B3B, #00FFB2);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .theme-btn:hover { transform: scale(1.1) rotate(30deg); border-color: color-mix(in srgb, var(--accent) 70%, transparent); }
+
+    .theme-popup {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 160px;
+      z-index: 200;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+
+    .theme-popup.open { display: flex; }
+
+    .theme-popup-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text2);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .theme-option {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px; font-weight: 500;
+      color: var(--text2);
+      border: 1px solid transparent;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .theme-option:hover { background: var(--bg4); color: var(--text); }
+
+    .theme-option.active {
+      color: var(--text);
+      border-color: var(--border2);
+      background: var(--bg4);
+    }
+
+    .theme-swatch {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* theme overrides */
+    body.theme-violet {
+      --accent:  #A855F7;
+      --accent2: #9333EA;
+      --adim:    color-mix(in srgb, #A855F7 8%, transparent);
+      --adim2:   color-mix(in srgb, #A855F7 18%, transparent);
+    }
+
+    body.theme-red {
+      --accent:  #FF3B3B;
+      --accent2: #E02020;
+      --adim:    color-mix(in srgb, #FF3B3B 8%, transparent);
+      --adim2:   color-mix(in srgb, #FF3B3B 18%, transparent);
+    }
+
+    /* ── SLIDER ── */
+    .slider-viewport {
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .slider-track {
+      display: flex;
+      width: 200%;
+      transition: transform 0.65s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slider-panel {
+      width: 50%;
+      min-width: 50%;
+    }
+
+    .section-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 0;
+    }
+
+    .slide-arrow {
+      width: 48px; height: 48px;
+      background: var(--bg3);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 8px;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .slide-arrow:hover {
+      background: var(--adim);
+      transform: translateX(3px);
+    }
+
+    /* coming soon panel */
+    .coming-soon-panel {
+      background: var(--bg2);
+      border-left: 1px solid var(--border);
+    }
+
+    .coming-soon-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 96px 52px;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      color: var(--text2);
+      font-family: var(--font);
+      font-size: 13px; font-weight: 500;
+      padding: 10px 18px;
+      cursor: pointer;
+      margin-bottom: 80px;
+      transition: color 0.2s, border-color 0.2s;
+      width: fit-content;
+    }
+
+    .slide-back:hover { color: var(--text); border-color: var(--border2); }
+
+    .coming-soon-content {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+
+    .coming-soon-kanji {
+      font-family: var(--kanji);
+      font-size: clamp(60px, 10vw, 130px);
+      color: var(--text3);
+      line-height: 1;
+      letter-spacing: -4px;
+      margin-bottom: 24px;
+      user-select: none;
+    }
+
+    .coming-soon-dots {
+      display: flex; gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .cs-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--text3);
+      transition: background 0.3s;
+    }
+
+    .cs-dot.active { background: var(--accent); }
+
+    .coming-soon-mono {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text2);
+      letter-spacing: 3px;
+      animation: blink 2s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
     /* ── BACK TO TOP ── */
     #btt {
       position: fixed;
@@ -581,7 +922,7 @@
       z-index: 200;
       width: 44px; height: 44px;
       background: var(--bg3);
-      border: 1px solid rgba(0,255,178,0.25);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
@@ -597,7 +938,7 @@
 
     #btt:hover {
       background: var(--adim);
-      border-color: rgba(0,255,178,0.5);
+      border-color: color-mix(in srgb, var(--accent) 50%, transparent);
     }
 
     #btt svg { color: var(--accent); }
@@ -623,7 +964,8 @@
       .app-card { grid-template-columns: 1fr; }
       .app-features { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 28px; }
       footer { padding: 40px 24px 56px; flex-direction: column; }
-      .footer-links { text-align: left; }
+      .plans-grid { grid-template-columns: 1fr; }
+      .tech-item { padding: 12px 24px; }
       .legal-doc { padding: 28px; }
     }
   </style>
@@ -641,6 +983,21 @@
     <li><a href="#apps">Apps</a></li>
     <li><a href="#legal">Privacy</a></li>
     <li><a href="mailto:zunolabs2025@gmail.com" class="nav-contact">Contact</a></li>
+    <li style="position:relative;">
+      <div class="theme-btn" id="themeBtn" onclick="toggleThemePopup(event)" title="Change theme"></div>
+      <div class="theme-popup" id="themePopup">
+        <div class="theme-popup-label">// tint</div>
+        <div class="theme-option active" id="opt-mint" onclick="setTheme('mint',this)">
+          <span class="theme-swatch" style="background:#00FFB2"></span> Mint
+        </div>
+        <div class="theme-option" id="opt-violet" onclick="setTheme('violet',this)">
+          <span class="theme-swatch" style="background:#A855F7"></span> Violet
+        </div>
+        <div class="theme-option" id="opt-red" onclick="setTheme('red',this)">
+          <span class="theme-swatch" style="background:#FF3B3B"></span> Red
+        </div>
+      </div>
+    </li>
   </ul>
 </nav>
 
@@ -665,24 +1022,38 @@
   <div class="about-inner">
     <div class="about-seal-wrap">
       <span class="about-kanji">大頭</span>
-      <span class="about-kanji-label">Daizuno · Great Mind</span>
+      <span class="about-kanji-label">Daizunō · Great Mind</span>
     </div>
     <div class="about-body">
       <blockquote>
         "We don't build what already exists.<br />
         We build what <em>should.</em>"
       </blockquote>
-      <p>ZunoLabs was born from a name — Daizuno, 大頭脳 — meaning Great Intellect. 大 (great) + 頭脳 (brain). That ethos drives everything we make: tools born from first principles, built for gaps nobody else has filled.</p>
+      <p>ZunoLabs was born from a name — Daizunō, 大頭脳 — meaning Great Intellect. 大 (great) + 頭脳 (brain). That ethos drives everything we make: tools born from first principles, built for gaps nobody else has filled.</p>
       <p>Zuno + Labs = a laboratory of brainpower. Every app we ship starts with a single question: <em style="color: var(--text);">does a good solution for this already exist?</em> If the answer is yes, we move on. If no — we build.</p>
     </div>
   </div>
 </section>
 
+<!-- SLIDER VIEWPORT -->
+<div class="slider-viewport">
+  <div class="slider-track" id="sliderTrack">
+    <div class="slider-panel">
+
 <!-- APPS -->
 <section class="section" id="apps">
-  <div class="eyebrow">// products</div>
-  <h2 class="section-h">What we've built</h2>
-  <p class="section-p">One app shipped. More experiments running in the lab.</p>
+  <div class="section-header-row">
+    <div>
+      <div class="eyebrow">// products</div>
+      <h2 class="section-h">What we've built</h2>
+      <p class="section-p">One app shipped. More experiments running in the lab.</p>
+    </div>
+    <button class="slide-arrow" onclick="slideToPanel(1)" aria-label="More apps">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6,3 12,9 6,15"/>
+      </svg>
+    </button>
+  </div>
 
   <div class="app-card">
     <div>
@@ -708,17 +1079,102 @@
     <div class="app-features">
       <div class="app-feat-title">// features</div>
       <ul class="app-feat-list">
-        <li><span class="feat-dot"></span>Map-first food logging</li>
-        <li><span class="feat-dot"></span>Full eating history + stats</li>
+        <li><span class="feat-dot"></span>Place-based food logging</li>
+        <li><span class="feat-dot"></span>Eating history + memory cards</li>
         <li><span class="feat-dot"></span>AI-powered insights (Pro)</li>
         <li><span class="feat-dot"></span>Country globe explorer</li>
-        <li><span class="feat-dot"></span>Offline-first, cloud-synced</li>
-        <li><span class="feat-dot"></span>Memory cards</li>
+        <li><span class="feat-dot"></span>Cloud-synced</li>
+        <li><span class="feat-dot"></span>Full map with place search (Pro)</li>
         <li><span class="feat-dot"></span>14 accent themes</li>
       </ul>
     </div>
   </div>
 </section>
+
+<div class="rule"></div>
+
+<!-- FREE VS PRO -->
+<section class="section" id="pricing">
+  <div class="eyebrow">// plans</div>
+  <h2 class="section-h">Free vs Pro</h2>
+  <p class="section-p">Start for free. Upgrade when you're ready to go deeper.</p>
+
+  <div class="plans-grid">
+    <div class="plan-card">
+      <div class="plan-header">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">₱0</div>
+        <div class="plan-desc">Forever free. No card needed.</div>
+      </div>
+      <ul class="plan-list">
+        <li class="yes">Up to 15 food logs</li>
+        <li class="yes">Place-based food logging</li>
+        <li class="yes">My Noms view &amp; history</li>
+        <li class="yes">Basic globe (fog of war)</li>
+        <li class="yes">Search &amp; filter logged places</li>
+        <li class="yes">Memory cards</li>
+        <li class="yes">Cloud-synced</li>
+        <li class="yes">14 accent themes</li>
+        <li class="no">Full map &amp; place search</li>
+        <li class="no">Country list explorer</li>
+        <li class="no">Place stats &amp; analytics</li>
+        <li class="no">AI-powered insights</li>
+      </ul>
+    </div>
+
+    <div class="plan-card pro">
+      <div class="plan-badge">PRO</div>
+      <div class="plan-header">
+        <div class="plan-name">Nomly Pro</div>
+        <div class="plan-price">₱199 <span class="plan-per">/ mo</span></div>
+        <div class="plan-desc">₱1,490 / year — save 47%</div>
+      </div>
+      <ul class="plan-list">
+        <li class="yes">Unlimited food logs</li>
+        <li class="yes">Place-based food logging</li>
+        <li class="yes">My Noms view &amp; history</li>
+        <li class="yes">Full globe + country list</li>
+        <li class="yes">Search &amp; filter logged places</li>
+        <li class="yes">Memory cards</li>
+        <li class="yes">Cloud-synced</li>
+        <li class="yes">14 accent themes</li>
+        <li class="yes">Full map, search nearby &amp; autocomplete</li>
+        <li class="yes">Country list explorer</li>
+        <li class="yes">Place stats &amp; analytics</li>
+        <li class="yes">AI-powered insights</li>
+      </ul>
+      <a href="https://play.google.com/store/apps/details?id=com.zunolabs.nomly" class="btn btn-fill" style="width:100%;justify-content:center;margin-top:28px;" target="_blank" rel="noopener">Get Nomly Pro</a>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- TECH STRIP -->
+<div class="tech-strip-wrap">
+  <div class="tech-strip-label">// powered by</div>
+  <div class="tech-track-outer">
+    <div class="tech-track">
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="20" /><span>Supabase</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/revenuecat/E8592A" height="20" /><span>RevenueCat</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/posthog/F25C02" height="20" /><span>PostHog</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/googlemaps/4285F4" height="20" /><span>Google Maps</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/expo/ffffff" height="20" /><span>Expo</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/googlegemini/4285F4" height="20" /><span>Google Gemini</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/react/61DAFB" height="20" /><span>React Native</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="20" /><span>SQLite</span></div>
+      <!-- duplicate for seamless loop -->
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="20" /><span>Supabase</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/revenuecat/E8592A" height="20" /><span>RevenueCat</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/posthog/F25C02" height="20" /><span>PostHog</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/googlemaps/4285F4" height="20" /><span>Google Maps</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/expo/ffffff" height="20" /><span>Expo</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/googlegemini/4285F4" height="20" /><span>Google Gemini</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/react/61DAFB" height="20" /><span>React Native</span></div>
+      <div class="tech-item"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="20" /><span>SQLite</span></div>
+    </div>
+  </div>
+</div>
 
 <div class="rule"></div>
 
@@ -744,7 +1200,7 @@
         <h2>What we collect</h2>
         <ul>
           <li><strong>Account info</strong> — your email address, used for authentication via Supabase.</li>
-          <li><strong>Food logs</strong> — meals you record: place, dish, rating, notes, and optional photo.</li>
+          <li><strong>Food logs</strong> — meals you record: place, dish, rating, optional notes and photo.</li>
           <li><strong>Location</strong> — used to show your position on the map and find nearby places. We do not store continuous location history.</li>
           <li><strong>Analytics</strong> — anonymized usage events via PostHog. No personal data attached.</li>
         </ul>
@@ -775,7 +1231,7 @@
         <p>Nomly is not directed at children under 13. We do not knowingly collect data from children.</p>
 
         <h2>Changes</h2>
-        <p>We'll notify you of significant changes via the app. Continued use after changes constitutes acceptance.</p>
+        <p>We'll notify you of significant changes via email. Continued use after changes constitutes acceptance.</p>
       </div>
     </div>
 
@@ -812,6 +1268,34 @@
     </div>
   </div>
 </section>
+    </div><!-- end panel 1 -->
+
+    <!-- PANEL 2: coming soon -->
+    <div class="slider-panel coming-soon-panel">
+      <div class="coming-soon-inner">
+        <button class="slide-back" onclick="slideToPanel(0)" aria-label="Back">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="12,3 6,9 12,15"/>
+          </svg>
+          Back
+        </button>
+        <div class="coming-soon-content">
+          <div class="coming-soon-kanji">大頭脳</div>
+          <div class="eyebrow" style="text-align:center;margin-bottom:16px;">// next experiment</div>
+          <h2 class="section-h" style="text-align:center;font-size:clamp(32px,4vw,56px);">Something is<br />being built.</h2>
+          <p style="text-align:center;color:var(--text2);font-size:16px;font-weight:300;max-width:400px;margin:0 auto 48px;line-height:1.8;">We don't announce until it's real. When the next app ships — it'll appear here.</p>
+          <div class="coming-soon-dots">
+            <span class="cs-dot active"></span>
+            <span class="cs-dot"></span>
+            <span class="cs-dot"></span>
+          </div>
+          <div class="coming-soon-mono">[ EXPERIMENT IN PROGRESS ]</div>
+        </div>
+      </div>
+    </div><!-- end panel 2 -->
+
+  </div><!-- end slider-track -->
+</div><!-- end slider-viewport -->
 
 <!-- FOOTER -->
 <div class="footer-wrap">
@@ -842,6 +1326,42 @@
 </button>
 
 <script>
+  function toggleThemePopup(e) {
+    e.stopPropagation();
+    document.getElementById('themePopup').classList.toggle('open');
+  }
+
+  document.addEventListener('click', () => {
+    document.getElementById('themePopup').classList.remove('open');
+  });
+
+  function setTheme(name, el) {
+    document.body.classList.remove('theme-violet', 'theme-red');
+    if (name !== 'mint') document.body.classList.add('theme-' + name);
+    document.querySelectorAll('.theme-option').forEach(d => d.classList.remove('active'));
+    document.getElementById('opt-' + name).classList.add('active');
+    document.getElementById('themePopup').classList.remove('open');
+    localStorage.setItem('zl-theme', name);
+  }
+
+  // restore on load
+  const saved = localStorage.getItem('zl-theme');
+  if (saved && saved !== 'mint') {
+    const opt = document.getElementById('opt-' + saved);
+    if (opt) setTheme(saved, opt);
+  }
+
+  let currentPanel = 0;
+  function slideToPanel(idx) {
+    currentPanel = idx;
+    const track = document.getElementById('sliderTrack');
+    track.style.transform = idx === 0 ? 'translateX(0)' : 'translateX(-50%)';
+    // animate dots
+    document.querySelectorAll('.cs-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+    });
+  }
+
   function showTab(tab, btn) {
     document.querySelectorAll('.lpane').forEach(el => el.classList.remove('on'));
     document.querySelectorAll('.ltab').forEach(el => el.classList.remove('on'));

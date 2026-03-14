@@ -2026,7 +2026,7 @@
   // Read current count on page load
   fetch(COUNTER_URL)
     .then(r => r.json())
-    .then(d => updateSpots(d.value || 0))
+    .then(d => updateSpots(d.count || d.value || 0))  // try both fields
     .catch(() => updateSpots(0));
 
   if (waitlistForm) {
@@ -2046,7 +2046,7 @@
           // Increment counter and update bar
           fetch(COUNTER_URL + '/up')
             .then(r => r.json())
-            .then(d => updateSpots(d.value || 0))
+            .then(d => updateSpots(d.count || d.value || 0))
             .catch(() => {});
 
           waitlistForm.style.display = 'none';

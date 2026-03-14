@@ -16,9 +16,9 @@
       --bg2:     #0D0D10;
       --bg3:     #14141A;
       --bg4:     #1C1C24;
-      --accent:  #00FFB2;
-      --accent2: #00C88A;
-      --adim:    var(--adim);
+      --accent:  #A855F7;
+      --accent2: #9333EA;
+      --adim:    color-mix(in srgb, var(--accent) 8%, transparent);
       --adim2:   color-mix(in srgb, var(--accent) 18%, transparent);
       --text:    #E8E4DC;
       --text2:   #5A5760;
@@ -39,10 +39,52 @@
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
+      cursor: none;
     }
 
     ::selection { background: var(--adim2); color: var(--accent); }
     a { color: var(--accent); text-decoration: none; }
+
+    /* ── CUSTOM CURSOR ── */
+    #cursor-dot {
+      position: fixed;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease;
+      will-change: left, top;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      width: 34px; height: 34px;
+      border: 1.5px solid color-mix(in srgb, var(--accent) 50%, transparent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease,
+                  border-color 0.3s ease, border-radius 0.3s ease;
+      will-change: left, top;
+    }
+
+    body.cursor-hover #cursor-dot {
+      transform: translate(-50%, -50%) scale(0);
+    }
+
+    body.cursor-hover #cursor-ring {
+      width: 48px; height: 48px;
+      border-color: color-mix(in srgb, var(--accent) 75%, transparent);
+      border-radius: 10px;
+    }
+
+    @media (hover: none) {
+      #cursor-dot, #cursor-ring { display: none; }
+      body { cursor: auto; }
+    }
 
     /* SCANLINE */
     body::after {
@@ -128,13 +170,22 @@
       mask-image: radial-gradient(ellipse 90% 90% at 20% 50%, black 20%, transparent 75%);
     }
 
+    /* Glow: always translate(-50%,-50%) so left/top = center point.
+       JS sets left/top in hero-relative px coordinates. */
     .hero-glow {
       position: absolute;
       width: 800px; height: 800px;
-      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 7%, transparent) 0%, transparent 65%);
-      top: 50%; left: -10%;
-      transform: translateY(-50%);
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 9%, transparent) 0%, transparent 65%);
       pointer-events: none;
+      transform: translate(-50%, -50%);
+      /* slow spring back — active when NOT tracking */
+      transition: left 1.4s cubic-bezier(0.19, 1, 0.22, 1),
+                  top  1.4s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    /* while mouse is inside hero — zero transition, raw mouse speed */
+    .hero-glow.is-tracking {
+      transition: none;
     }
 
     .hero-content { position: relative; max-width: 1100px; margin: 0 auto; width: 100%; }
@@ -205,7 +256,7 @@
       font-size: 14px; font-weight: 600;
       padding: 13px 24px;
       border-radius: 10px;
-      cursor: pointer; border: none;
+      cursor: none; border: none;
       text-decoration: none;
       transition: transform 0.15s, opacity 0.2s;
     }
@@ -213,7 +264,7 @@
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: scale(0.98); }
 
-    .btn-fill { background: var(--accent); color: #060608; }
+    .btn-fill { background: var(--accent); color: var(--bg); }
     .btn-fill:hover { opacity: 0.88; }
 
     .btn-line {
@@ -222,7 +273,7 @@
       border: 1px solid var(--border2);
     }
 
-    .btn-line:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+    .btn-line:hover { color: var(--text); border-color: var(--border2); }
 
     /* ── RULE ── */
     .rule { height: 1px; background: var(--border); }
@@ -399,7 +450,7 @@
       font-size: 13px; font-weight: 600;
       padding: 11px 20px;
       border-radius: 10px;
-      cursor: pointer;
+      cursor: none;
       text-decoration: none;
       transition: transform 0.15s, opacity 0.18s;
       border: none;
@@ -407,7 +458,7 @@
 
     .app-btn:hover { transform: translateY(-1px); }
 
-    .app-btn-fill { background: var(--accent); color: #060608; }
+    .app-btn-fill { background: var(--accent); color: var(--bg); }
     .app-btn-fill:hover { opacity: 0.88; }
 
     .app-btn-line {
@@ -416,7 +467,7 @@
       border: 1px solid var(--border2);
     }
 
-    .app-btn-line:hover { color: var(--text); border-color: rgba(255,255,255,0.16); }
+    .app-btn-line:hover { color: var(--text); border-color: var(--border2); }
 
     .app-features {
       border-left: 1px solid var(--border);
@@ -472,7 +523,7 @@
       color: var(--text2);
       font-family: var(--font);
       font-size: 13px; font-weight: 500;
-      cursor: pointer;
+      cursor: none;
       transition: all 0.2s;
     }
 
@@ -536,7 +587,7 @@
       gap: 40px;
     }
 
-    /*  .footer-left {} */
+    .footer-left { flex: 1; min-width: 180px; }
 
     .footer-brand {
       display: flex; align-items: center; gap: 10px;
@@ -558,7 +609,9 @@
     .footer-copy { font-size: 12px; color: var(--text3); }
 
     .footer-links {
-      display: flex; flex-direction: column; gap: 12px; text-align: right;
+      display: flex; flex-direction: column; gap: 12px;
+      text-align: right;
+      margin-left: auto;
     }
 
     .footer-links a {
@@ -573,6 +626,24 @@
       from { opacity: 0; transform: translateY(22px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+    .reveal-d3 { transition-delay: 0.24s; }
+    .reveal-d4 { transition-delay: 0.32s; }
 
     /* ── PLANS ── */
     .plans-grid {
@@ -599,7 +670,7 @@
       position: absolute;
       top: -1px; right: 24px;
       background: var(--accent);
-      color: #060608;
+      color: var(--bg);
       font-family: var(--mono);
       font-size: 10px;
       font-weight: 700;
@@ -696,6 +767,7 @@
 
     .tech-track:hover { animation-play-state: paused; }
 
+    /* now an <a> tag */
     .tech-item {
       display: flex; align-items: center; gap: 10px;
       padding: 12px 36px;
@@ -703,13 +775,18 @@
       white-space: nowrap;
       color: var(--text2);
       font-size: 13px; font-weight: 500;
-      transition: color 0.2s;
+      transition: color 0.2s, background 0.2s;
+      text-decoration: none;
+      cursor: none;
     }
 
-    .tech-item:hover { color: var(--text); }
+    .tech-item:hover {
+      color: var(--text);
+      background: color-mix(in srgb, var(--text) 4%, transparent);
+    }
 
-    .tech-item svg { flex-shrink: 0; opacity: 0.7; }
-    .tech-item:hover svg { opacity: 1; }
+    .tech-item img { flex-shrink: 0; opacity: 0.65; transition: opacity 0.2s; }
+    .tech-item:hover img { opacity: 1; }
 
     @keyframes scroll-tech {
       from { transform: translateX(0); }
@@ -722,7 +799,7 @@
       border-radius: 50%;
       border: 2px solid color-mix(in srgb, var(--accent) 40%, transparent);
       background: conic-gradient(#00FFB2, #A855F7, #FF3B3B, #00FFB2);
-      cursor: pointer;
+      cursor: none;
       position: relative;
       transition: transform 0.2s, border-color 0.2s;
       flex-shrink: 0;
@@ -761,7 +838,7 @@
       display: flex; align-items: center; gap: 12px;
       padding: 8px 10px;
       border-radius: 8px;
-      cursor: pointer;
+      cursor: none;
       font-size: 13px; font-weight: 500;
       color: var(--text2);
       border: 1px solid transparent;
@@ -782,12 +859,14 @@
       flex-shrink: 0;
     }
 
-    /* theme overrides */
-    body.theme-violet {
-      --accent:  #A855F7;
-      --accent2: #9333EA;
-      --adim:    color-mix(in srgb, #A855F7 8%, transparent);
-      --adim2:   color-mix(in srgb, #A855F7 18%, transparent);
+    /* ── THEME TINT OVERRIDES ── */
+    /* violet is :root default — no class needed */
+
+    body.theme-mint {
+      --accent:  #00FFB2;
+      --accent2: #00C88A;
+      --adim:    color-mix(in srgb, #00FFB2 8%, transparent);
+      --adim2:   color-mix(in srgb, #00FFB2 18%, transparent);
     }
 
     body.theme-red {
@@ -796,6 +875,99 @@
       --adim:    color-mix(in srgb, #FF3B3B 8%, transparent);
       --adim2:   color-mix(in srgb, #FF3B3B 18%, transparent);
     }
+
+    /* mono = white in dark mode */
+    body.theme-mono {
+      --accent:  #FFFFFF;
+      --accent2: #CCCCCC;
+      --adim:    color-mix(in srgb, #FFFFFF 8%, transparent);
+      --adim2:   color-mix(in srgb, #FFFFFF 18%, transparent);
+    }
+
+    /* ── LIGHT MODE ── */
+    body.light-mode {
+      --bg:      #F4F4F8;
+      --bg2:     #ECEDF2;
+      --bg3:     #E2E3EA;
+      --bg4:     #D6D7E2;
+      --text:    #0D0D12;
+      --text2:   #6A6878;
+      --text3:   #C0C0CC;
+      --border:  rgba(0,0,0,0.07);
+      --border2: rgba(0,0,0,0.13);
+    }
+
+    body.light-mode nav {
+      background: rgba(244,244,248,0.92);
+      border-bottom-color: rgba(0,0,0,0.08);
+    }
+
+    /* scanline is too heavy on light bg — tone down */
+    body.light-mode::after {
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.012) 2px, rgba(0,0,0,0.012) 4px);
+    }
+
+    /* hero grid lines need to be darker-tinted on light bg */
+    body.light-mode .hero-grid {
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--accent) 8%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--accent) 8%, transparent) 1px, transparent 1px);
+    }
+
+    /* footer copyright — text3 is too faint on light bg */
+    body.light-mode .footer-copy { color: var(--text2); }
+
+    /* about section bg matches page better in light */
+    body.light-mode .about {
+      background: var(--bg2);
+    }
+
+    /* legal doc inner card — needs slightly more contrast */
+    body.light-mode .legal-doc {
+      background: var(--bg);
+      border-color: var(--border2);
+    }
+
+    /* legal tab active state */
+    body.light-mode .ltab.on {
+      background: var(--bg3);
+      color: var(--text);
+    }
+
+    /* coming soon panel */
+    body.light-mode .coming-soon-panel {
+      background: var(--bg2);
+      border-left-color: var(--border);
+    }
+
+    /* mono = black in light mode */
+    body.light-mode.theme-mono {
+      --accent:  #0D0D12;
+      --accent2: #333340;
+      --adim:    color-mix(in srgb, #0D0D12 8%, transparent);
+      --adim2:   color-mix(in srgb, #0D0D12 18%, transparent);
+    }
+
+    /* ── DARK/LIGHT TOGGLE BUTTON ── */
+    .mode-btn {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border2);
+      background: var(--bg3);
+      cursor: none;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text2);
+      flex-shrink: 0;
+      transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .mode-btn:hover {
+      border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+      color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .mode-btn svg { pointer-events: none; }
 
     /* ── SLIDER ── */
     .slider-viewport {
@@ -828,7 +1000,7 @@
       border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
+      cursor: none;
       color: var(--accent);
       flex-shrink: 0;
       margin-top: 8px;
@@ -864,7 +1036,7 @@
       font-family: var(--font);
       font-size: 13px; font-weight: 500;
       padding: 10px 18px;
-      cursor: pointer;
+      cursor: none;
       margin-bottom: 80px;
       transition: color 0.2s, border-color 0.2s;
       width: fit-content;
@@ -925,7 +1097,7 @@
       border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
+      cursor: none;
       opacity: 0; pointer-events: none;
       transform: translateY(12px);
       transition: opacity 0.3s, transform 0.3s, border-color 0.2s, background 0.2s;
@@ -964,13 +1136,26 @@
       .app-card { grid-template-columns: 1fr; }
       .app-features { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 28px; }
       footer { padding: 40px 24px 56px; flex-direction: column; }
+      .footer-links { margin-left: 0; text-align: left; }
       .plans-grid { grid-template-columns: 1fr; }
       .tech-item { padding: 12px 24px; }
       .legal-doc { padding: 28px; }
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      .hero-glow { transition: none !important; }
+      #cursor-dot, #cursor-ring { display: none; }
+      body { cursor: auto; }
     }
   </style>
 </head>
 <body>
+
+<!-- CUSTOM CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
 <!-- NAV -->
 <nav>
@@ -984,17 +1169,29 @@
     <li><a href="#legal">Privacy</a></li>
     <li><a href="mailto:zunolabs2025@gmail.com" class="nav-contact">Contact</a></li>
     <li style="position:relative;">
-      <div class="theme-btn" id="themeBtn" onclick="toggleThemePopup(event)" title="Change theme"></div>
+      <button class="mode-btn" id="modeBtn" onclick="toggleMode(event)" title="Toggle light/dark mode">
+        <!-- icon swaps via JS -->
+        <svg id="modeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </li>
+    <li style="position:relative;">
+      <div class="theme-btn" id="themeBtn" onclick="toggleThemePopup(event)" title="Change tint"></div>
       <div class="theme-popup" id="themePopup">
         <div class="theme-popup-label">// tint</div>
-        <div class="theme-option active" id="opt-mint" onclick="setTheme('mint',this)">
-          <span class="theme-swatch" style="background:#00FFB2"></span> Mint
-        </div>
-        <div class="theme-option" id="opt-violet" onclick="setTheme('violet',this)">
+        <div class="theme-option active" id="opt-violet" onclick="setTheme('violet',this)">
           <span class="theme-swatch" style="background:#A855F7"></span> Violet
+        </div>
+        <div class="theme-option" id="opt-mint" onclick="setTheme('mint',this)">
+          <span class="theme-swatch" style="background:#00FFB2"></span> Mint
         </div>
         <div class="theme-option" id="opt-red" onclick="setTheme('red',this)">
           <span class="theme-swatch" style="background:#FF3B3B"></span> Red
+        </div>
+        <div class="theme-option" id="opt-mono" onclick="setTheme('mono',this)">
+          <span class="theme-swatch" id="mono-swatch" style="background:#FFFFFF;border:1px solid rgba(255,255,255,0.2)"></span>
+          <span id="mono-label">White</span>
         </div>
       </div>
     </li>
@@ -1002,14 +1199,14 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" id="hero-section">
   <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
+  <div class="hero-glow" id="heroGlow"></div>
   <div class="hero-content">
     <div class="hero-eyebrow">ZunoLabs · Est. 2025</div>
     <span class="hero-kanji">大頭脳</span>
     <h1>Laboratory of<br /><span class="hi">Intellect.</span></h1>
-    <p class="hero-desc">We build apps that haven't been built yet. If it already exists and works — we're not interested. We exist to explore the gaps.</p>
+    <p class="hero-desc">We build apps that haven't been built yet. If it already exists and works — we're not interested. We exist to explore the gaps between memory, intelligence, and experience.</p>
     <div class="hero-btns">
       <a href="#apps" class="btn btn-fill">See our apps</a>
       <a href="mailto:zunolabs2025@gmail.com" class="btn btn-line">Get in touch</a>
@@ -1020,11 +1217,11 @@
 <!-- ABOUT -->
 <section class="about" id="about">
   <div class="about-inner">
-    <div class="about-seal-wrap">
+    <div class="about-seal-wrap reveal">
       <span class="about-kanji">大頭</span>
       <span class="about-kanji-label">Daizunō · Great Mind</span>
     </div>
-    <div class="about-body">
+    <div class="about-body reveal reveal-d2">
       <blockquote>
         "We don't build what already exists.<br />
         We build what <em>should</em> exist."
@@ -1043,19 +1240,19 @@
 <!-- APPS -->
 <section class="section" id="apps">
   <div class="section-header-row">
-    <div>
+    <div class="reveal">
       <div class="eyebrow">// products</div>
       <h2 class="section-h">What we've built</h2>
       <p class="section-p">One app shipped. More experiments running in the lab.</p>
     </div>
-    <button class="slide-arrow" onclick="slideToPanel(1)" aria-label="More apps">
+    <button class="slide-arrow reveal reveal-d2" onclick="slideToPanel(1)" aria-label="More apps">
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="6,3 12,9 6,15"/>
       </svg>
     </button>
   </div>
 
-  <div class="app-card">
+  <div class="app-card reveal reveal-d1">
     <div>
       <div class="app-icon">🦈</div>
       <div class="app-name">Nomly</div>
@@ -1066,7 +1263,6 @@
         <span class="tag">Personal</span>
         <span class="tag">Maps</span>
         <span class="tag">AI</span>
-        <span class="tag">Offline-first</span>
       </div>
       <div class="app-actions">
         <a href="https://play.google.com/store/apps/details?id=com.zunolabs.nomly" class="app-btn app-btn-fill" target="_blank" rel="noopener">
@@ -1095,11 +1291,11 @@
 
 <!-- FREE VS PRO -->
 <section class="section" id="pricing">
-  <div class="eyebrow">// plans</div>
-  <h2 class="section-h">Free vs Pro</h2>
-  <p class="section-p">Start for free. Upgrade when you're ready to go deeper.</p>
+  <div class="eyebrow reveal">// plans</div>
+  <h2 class="section-h reveal reveal-d1">Free vs Pro</h2>
+  <p class="section-p reveal reveal-d2">Start for free. Upgrade when you're ready to go deeper.</p>
 
-  <div class="plans-grid">
+  <div class="plans-grid reveal reveal-d3">
     <div class="plan-card">
       <div class="plan-header">
         <div class="plan-name">Free</div>
@@ -1110,7 +1306,7 @@
         <li class="yes">Up to 15 food logs</li>
         <li class="yes">Place-based food logging</li>
         <li class="yes">My Noms view &amp; history</li>
-        <li class="yes">Basic globe (fog of war)</li>
+        <li class="yes">Basic globe display</li>
         <li class="yes">Search &amp; filter logged places</li>
         <li class="yes">Memory cards</li>
         <li class="yes">Cloud-synced</li>
@@ -1133,13 +1329,12 @@
         <li class="yes">Unlimited food logs</li>
         <li class="yes">Place-based food logging</li>
         <li class="yes">My Noms view &amp; history</li>
-        <li class="yes">Full globe + country list</li>
+        <li class="yes">Full globe + country list explorer</li>
         <li class="yes">Search &amp; filter logged places</li>
         <li class="yes">Memory cards</li>
         <li class="yes">Cloud-synced</li>
         <li class="yes">14 accent themes</li>
         <li class="yes">Full map, search nearby &amp; autocomplete</li>
-        <li class="yes">Country list explorer</li>
         <li class="yes">Place stats &amp; analytics</li>
         <li class="yes">AI-powered insights</li>
       </ul>
@@ -1152,26 +1347,26 @@
 
 <!-- TECH STRIP -->
 <div class="tech-strip-wrap">
-  <div class="tech-strip-label">// powered by</div>
+  <div class="tech-strip-label reveal">// powered by</div>
   <div class="tech-track-outer">
     <div class="tech-track">
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="20" /><span>Supabase</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/revenuecat/E8592A" height="20" /><span>RevenueCat</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/posthog/F25C02" height="20" /><span>PostHog</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/googlemaps/4285F4" height="20" /><span>Google Maps</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/expo/ffffff" height="20" /><span>Expo</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/googlegemini/4285F4" height="20" /><span>Google Gemini</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/react/61DAFB" height="20" /><span>React Native</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="20" /><span>SQLite</span></div>
+      <a href="https://supabase.com" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="20" alt="Supabase" /><span>Supabase</span></a>
+      <a href="https://www.revenuecat.com" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/revenuecat/E8592A" height="20" alt="RevenueCat" /><span>RevenueCat</span></a>
+      <a href="https://posthog.com" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/posthog/F25C02" height="20" alt="PostHog" /><span>PostHog</span></a>
+      <a href="https://developers.google.com/maps" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/googlemaps/4285F4" height="20" alt="Google Maps" /><span>Google Maps</span></a>
+      <a href="https://expo.dev" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/expo/ffffff" height="20" alt="Expo" /><span>Expo</span></a>
+      <a href="https://gemini.google.com" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/googlegemini/4285F4" height="20" alt="Google Gemini" /><span>Google Gemini</span></a>
+      <a href="https://reactnative.dev" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/react/61DAFB" height="20" alt="React Native" /><span>React Native</span></a>
+      <a href="https://www.sqlite.org" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="20" alt="SQLite" /><span>SQLite</span></a>
       <!-- duplicate for seamless loop -->
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="20" /><span>Supabase</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/revenuecat/E8592A" height="20" /><span>RevenueCat</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/posthog/F25C02" height="20" /><span>PostHog</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/googlemaps/4285F4" height="20" /><span>Google Maps</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/expo/ffffff" height="20" /><span>Expo</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/googlegemini/4285F4" height="20" /><span>Google Gemini</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/react/61DAFB" height="20" /><span>React Native</span></div>
-      <div class="tech-item"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="20" /><span>SQLite</span></div>
+      <a href="https://supabase.com" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="20" alt="Supabase" /><span>Supabase</span></a>
+      <a href="https://www.revenuecat.com" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/revenuecat/E8592A" height="20" alt="RevenueCat" /><span>RevenueCat</span></a>
+      <a href="https://posthog.com" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/posthog/F25C02" height="20" alt="PostHog" /><span>PostHog</span></a>
+      <a href="https://developers.google.com/maps" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/googlemaps/4285F4" height="20" alt="Google Maps" /><span>Google Maps</span></a>
+      <a href="https://expo.dev" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/expo/ffffff" height="20" alt="Expo" /><span>Expo</span></a>
+      <a href="https://gemini.google.com" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/googlegemini/4285F4" height="20" alt="Google Gemini" /><span>Google Gemini</span></a>
+      <a href="https://reactnative.dev" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/react/61DAFB" height="20" alt="React Native" /><span>React Native</span></a>
+      <a href="https://www.sqlite.org" target="_blank" rel="noopener" class="tech-item"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="20" alt="SQLite" /><span>SQLite</span></a>
     </div>
   </div>
 </div>
@@ -1181,16 +1376,16 @@
 <!-- LEGAL -->
 <section class="legal-wrap" id="legal">
   <div class="section">
-    <div class="eyebrow">// legal</div>
-    <h2 class="section-h">Privacy & Terms</h2>
-    <p class="section-p">Straightforward. Your data belongs to you.</p>
+    <div class="eyebrow reveal">// legal</div>
+    <h2 class="section-h reveal reveal-d1">Privacy & Terms</h2>
+    <p class="section-p reveal reveal-d2">Straightforward. Your data belongs to you.</p>
 
-    <div class="legal-tabs">
+    <div class="legal-tabs reveal reveal-d3">
       <button class="ltab on" onclick="showTab('privacy',this)">Privacy Policy</button>
       <button class="ltab" onclick="showTab('terms',this)">Terms of Service</button>
     </div>
 
-    <div class="lpane on" id="pane-privacy">
+    <div class="lpane on reveal reveal-d4" id="pane-privacy">
       <div class="legal-doc">
         <span class="stamp">// Last updated: March 2026 · Nomly v1.0</span>
 
@@ -1326,6 +1521,108 @@
 </button>
 
 <script>
+  /* ─────────────────────────────────────────
+     CUSTOM CURSOR
+     dot sits exactly on pointer;
+     ring lazily lerps behind it
+  ───────────────────────────────────────── */
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+
+  let mx = -200, my = -200;   // mouse position
+  let rx = -200, ry = -200;   // ring position (lerped)
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  (function loop() {
+    rx = lerp(rx, mx, 0.15);
+    ry = lerp(ry, my, 0.15);
+
+    dot.style.left  = mx + 'px';
+    dot.style.top   = my + 'px';
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+
+    requestAnimationFrame(loop);
+  })();
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+  }, { passive: true });
+
+  // expand ring on hover over interactive elements
+  const HOVER_SEL = 'a, button, [onclick], .tech-item, .theme-option, #btt';
+
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(HOVER_SEL)) document.body.classList.add('cursor-hover');
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(HOVER_SEL)) document.body.classList.remove('cursor-hover');
+  });
+
+  // fade out when leaving viewport
+  document.documentElement.addEventListener('mouseleave', () => {
+    dot.style.opacity = ring.style.opacity = '0';
+  });
+  document.documentElement.addEventListener('mouseenter', () => {
+    dot.style.opacity = ring.style.opacity = '1';
+  });
+
+
+  /* ─────────────────────────────────────────
+     HERO GLOW — follows cursor inside hero,
+     springs back to origin on leave.
+     KEY: left/top are hero-relative px.
+     transform: translate(-50%,-50%) is always on.
+  ───────────────────────────────────────── */
+  const hero     = document.getElementById('hero-section');
+  const heroGlow = document.getElementById('heroGlow');
+
+  // Set initial position in px so the spring-back transition works correctly.
+  // Origin: center of glow at (heroWidth * -0.1 + 400, heroHeight * 0.5)
+  function setGlowOrigin() {
+    const r = hero.getBoundingClientRect();
+    heroGlow.style.left = (r.width * -0.1 + 400) + 'px';
+    heroGlow.style.top  = (r.height * 0.5) + 'px';
+  }
+  setGlowOrigin();
+
+  hero.addEventListener('mouseenter', () => {
+    heroGlow.classList.add('is-tracking');
+  });
+
+  hero.addEventListener('mousemove', e => {
+    // Convert viewport coords → hero-relative coords
+    const r = hero.getBoundingClientRect();
+    heroGlow.style.left = (e.clientX - r.left) + 'px';
+    heroGlow.style.top  = (e.clientY - r.top)  + 'px';
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', () => {
+    heroGlow.classList.remove('is-tracking'); // re-enables spring transition
+    setGlowOrigin();                           // animate back to origin
+  });
+
+
+  /* ─────────────────────────────────────────
+     SCROLL REVEAL — IntersectionObserver
+  ───────────────────────────────────────── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+
+  /* ─────────────────────────────────────────
+     EXISTING SCRIPTS — untouched
+  ───────────────────────────────────────── */
   function toggleThemePopup(e) {
     e.stopPropagation();
     document.getElementById('themePopup').classList.toggle('open');
@@ -1335,20 +1632,62 @@
     document.getElementById('themePopup').classList.remove('open');
   });
 
+  // ── TINT ──
   function setTheme(name, el) {
-    document.body.classList.remove('theme-violet', 'theme-red');
-    if (name !== 'mint') document.body.classList.add('theme-' + name);
+    document.body.classList.remove('theme-mint', 'theme-red', 'theme-mono');
+    if (name !== 'violet') document.body.classList.add('theme-' + name);
     document.querySelectorAll('.theme-option').forEach(d => d.classList.remove('active'));
     document.getElementById('opt-' + name).classList.add('active');
     document.getElementById('themePopup').classList.remove('open');
     localStorage.setItem('zl-theme', name);
   }
 
-  // restore on load
-  const saved = localStorage.getItem('zl-theme');
-  if (saved && saved !== 'mint') {
-    const opt = document.getElementById('opt-' + saved);
-    if (opt) setTheme(saved, opt);
+  // ── DARK / LIGHT MODE ──
+  let isLight = false;
+
+  function updateModeUI() {
+    const icon = document.getElementById('modeIcon');
+    if (isLight) {
+      // sun icon
+      icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    } else {
+      // moon icon
+      icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    }
+    // update mono swatch + label to match mode
+    const swatch = document.getElementById('mono-swatch');
+    const label  = document.getElementById('mono-label');
+    if (isLight) {
+      swatch.style.background = '#0D0D12';
+      swatch.style.border = '1px solid rgba(0,0,0,0.15)';
+      label.textContent = 'Black';
+    } else {
+      swatch.style.background = '#FFFFFF';
+      swatch.style.border = '1px solid rgba(255,255,255,0.2)';
+      label.textContent = 'White';
+    }
+  }
+
+  function toggleMode(e) {
+    e.stopPropagation();
+    isLight = !isLight;
+    document.body.classList.toggle('light-mode', isLight);
+    localStorage.setItem('zl-mode', isLight ? 'light' : 'dark');
+    updateModeUI();
+  }
+
+  // ── RESTORE ON LOAD ──
+  const savedMode = localStorage.getItem('zl-mode');
+  if (savedMode === 'light') {
+    isLight = true;
+    document.body.classList.add('light-mode');
+  }
+  updateModeUI();
+
+  const savedTheme = localStorage.getItem('zl-theme');
+  if (savedTheme && savedTheme !== 'violet') {
+    const opt = document.getElementById('opt-' + savedTheme);
+    if (opt) setTheme(savedTheme, opt);
   }
 
   let currentPanel = 0;
@@ -1356,7 +1695,6 @@
     currentPanel = idx;
     const track = document.getElementById('sliderTrack');
     track.style.transform = idx === 0 ? 'translateX(0)' : 'translateX(-50%)';
-    // animate dots
     document.querySelectorAll('.cs-dot').forEach((d, i) => {
       d.classList.toggle('active', i === idx);
     });

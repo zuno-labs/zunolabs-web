@@ -2003,13 +2003,13 @@
     });
   });
 
-  /* ─────────────────────────────────────────
-     WAITLIST FORM + LIVE COUNTER
-     Counter: counterapi.dev/api/zunolabs/nomly-waitlist
-     Cap: 100 beta spots
+ /* ─────────────────────────────────────────
+     WAITLIST FORM + SPOTS BAR
+     Hardcoded count — update currentCount when
+     new signups come in and redeploy.
   ───────────────────────────────────────── */
-  const COUNTER_URL = 'https://counterapi.dev/api/zunolabs/nomly-waitlist';
-  const BETA_CAP    = 100;
+  const BETA_CAP = 100;
+  let currentCount = 2; // ← update this number manually as signups grow
 
   const waitlistForm    = document.getElementById('waitlistForm');
   const waitlistBtn     = document.getElementById('waitlistBtn');
@@ -2023,11 +2023,7 @@
     spotsLabel.textContent = pct + '%';
   }
 
-  // Read current count on page load
-  fetch(COUNTER_URL)
-    .then(r => r.json())
-    .then(d => updateSpots(d.count || d.value || 0))  // try both fields
-    .catch(() => updateSpots(0));
+  updateSpots(currentCount);
 
   if (waitlistForm) {
     waitlistForm.addEventListener('submit', async e => {
@@ -2043,12 +2039,8 @@
         });
 
         if (res.ok) {
-          // Increment counter and update bar
-          fetch(COUNTER_URL + '/up')
-            .then(r => r.json())
-            .then(d => updateSpots(d.count || d.value || 0))
-            .catch(() => {});
-
+          currentCount++;
+          updateSpots(currentCount);
           waitlistForm.style.display = 'none';
           waitlistSuccess.classList.add('show');
         } else {

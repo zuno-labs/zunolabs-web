@@ -541,7 +541,7 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 48px;
-      max-width: 780px;
+      max-width: 960px;
     }
 
     .legal-doc .stamp {
@@ -948,7 +948,192 @@
       --adim2:   color-mix(in srgb, #0D0D12 18%, transparent);
     }
 
-    /* ── DARK/LIGHT TOGGLE BUTTON ── */
+    /* ── WAITLIST ── */
+    .waitlist-wrap {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .waitlist-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 96px 52px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .waitlist-left .eyebrow { margin-bottom: 18px; }
+
+    .waitlist-left h2 {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+
+    .waitlist-left p {
+      font-size: 15px;
+      color: var(--text2);
+      font-weight: 300;
+      line-height: 1.85;
+      max-width: 380px;
+    }
+
+    .waitlist-status {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--adim);
+      border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+      border-radius: 20px;
+      padding: 5px 12px;
+      margin-bottom: 24px;
+    }
+
+    .waitlist-status::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .waitlist-form {
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 36px;
+    }
+
+    .waitlist-form-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text2);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .waitlist-input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .waitlist-input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 13px 16px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: text;
+    }
+
+    .waitlist-input::placeholder { color: var(--text2); }
+
+    .waitlist-input:focus {
+      border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+      box-shadow: 0 0 0 3px var(--adim);
+    }
+
+    .waitlist-submit {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 10px;
+      padding: 13px 22px;
+      font-family: var(--font);
+      font-size: 14px; font-weight: 600;
+      cursor: none;
+      white-space: nowrap;
+      transition: opacity 0.2s, transform 0.15s;
+      flex-shrink: 0;
+    }
+
+    .waitlist-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+    .waitlist-submit:active { transform: scale(0.98); }
+    .waitlist-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .waitlist-note {
+      font-size: 12px;
+      color: var(--text2);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .waitlist-success {
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 20px;
+      background: var(--adim);
+      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+      border-radius: 12px;
+      margin-bottom: 14px;
+    }
+
+    .waitlist-success.show { display: flex; }
+
+    .waitlist-success-title {
+      font-size: 14px; font-weight: 600;
+      color: var(--accent);
+    }
+
+    .waitlist-success-sub {
+      font-size: 13px;
+      color: var(--text2);
+      font-weight: 300;
+    }
+
+    .waitlist-spots {
+      display: flex; align-items: center; gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .waitlist-spots-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .waitlist-spots-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .waitlist-spots-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text2);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
     .mode-btn {
       width: 30px; height: 30px;
       border-radius: 50%;
@@ -1128,7 +1313,8 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 800px) {
       nav { padding: 0 20px; }
-      .nav-links { display: none; }
+      .nav-links li:not(.nav-ctrl) { display: none; }
+      .nav-links { gap: 12px; }
       .hero, .section { padding-left: 24px; padding-right: 24px; }
       .about-inner { grid-template-columns: 1fr; gap: 40px; padding: 64px 24px; }
       .about-seal-wrap { display: none; }
@@ -1139,6 +1325,11 @@
       .plans-grid { grid-template-columns: 1fr; }
       .tech-item { padding: 12px 24px; }
       .legal-doc { padding: 28px; }
+      .coming-soon-inner { padding: 64px 24px; }
+      .waitlist-inner { grid-template-columns: 1fr; gap: 40px; padding: 64px 24px; }
+      .waitlist-form { padding: 24px; }
+      .waitlist-input-row { flex-direction: column; }
+      .waitlist-submit { width: 100%; }
       .reveal { opacity: 1; transform: none; transition: none; }
     }
 
@@ -1167,7 +1358,7 @@
     <li><a href="#apps">Apps</a></li>
     <li><a href="#legal">Privacy</a></li>
     <li><a href="mailto:zunolabs2025@gmail.com" class="nav-contact">Contact</a></li>
-    <li style="position:relative;">
+    <li class="nav-ctrl" style="position:relative;">
       <button class="mode-btn" id="modeBtn" onclick="toggleMode(event)" title="Toggle light/dark mode">
         <!-- icon swaps via JS -->
         <svg id="modeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1175,7 +1366,7 @@
         </svg>
       </button>
     </li>
-    <li style="position:relative;">
+    <li class="nav-ctrl" style="position:relative;">
       <div class="theme-btn" id="themeBtn" onclick="toggleThemePopup(event)" title="Change tint"></div>
       <div class="theme-popup" id="themePopup">
         <div class="theme-popup-label">// tint</div>
@@ -1207,7 +1398,7 @@
     <h1>Laboratory of<br /><span class="hi">Intellect.</span></h1>
     <p class="hero-desc">We build apps that haven't been built yet. If it already exists and works — we're not interested. We exist to explore the gaps between memory, intelligence, and experience.</p>
     <div class="hero-btns">
-      <a href="#apps" class="btn btn-fill">See our apps</a>
+      <a href="#waitlist" class="btn btn-fill">Join the waitlist</a>
       <a href="mailto:zunolabs2025@gmail.com" class="btn btn-line">Get in touch</a>
     </div>
   </div>
@@ -1242,7 +1433,7 @@
     <div class="reveal">
       <div class="eyebrow">// products</div>
       <h2 class="section-h">What we've built</h2>
-      <p class="section-p">One app shipped. More experiments running in the lab.</p>
+      <p class="section-p">In closed beta. Be first in line when we launch.</p>
     </div>
     <button class="slide-arrow reveal reveal-d2" onclick="slideToPanel(1)" aria-label="More apps">
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1253,20 +1444,20 @@
 
   <div class="app-card reveal reveal-d1">
     <div>
-      <div class="app-icon">🦈</div>
+      <div class="app-icon"><img src="nomly_mascot.svg" alt="Nomly icon" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
       <div class="app-name">Nomly</div>
       <p class="app-desc">Your personal food journal. Log meals from the map, track your eating history, rediscover great dishes, and never repeat a bad one. Built for real eaters who want more than a notes app — and less than a social network.</p>
       <div class="app-tags">
-        <span class="tag hi">Android</span>
+        <span class="tag hi">Closed Beta</span>
         <span class="tag">Food</span>
         <span class="tag">Personal</span>
         <span class="tag">Maps</span>
         <span class="tag">AI</span>
       </div>
       <div class="app-actions">
-        <a href="https://play.google.com/store/apps/details?id=com.zunolabs.nomly" class="app-btn app-btn-fill" target="_blank" rel="noopener">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.24.99.2l13.12-11.82L13.56 8.4 3.18 23.76zm16.6-10.65L16.9 11.5l-3.34 3 3.34 3.02 2.9-1.62c.83-.46.83-1.73-.02-2.19zM3.09.25C2.78.05 2.41-.04 2.04.02L14.64 12 10.87 15.6.01 1.15.01 1.15c-.04.35.03.7.2.99l2.88 21.62z"/></svg>
-          Google Play
+        <a href="#waitlist" class="app-btn app-btn-fill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          Join waitlist
         </a>
         <a href="#legal" class="app-btn app-btn-line">Privacy Policy</a>
       </div>
@@ -1292,7 +1483,7 @@
 <section class="section" id="pricing">
   <div class="eyebrow reveal">// plans</div>
   <h2 class="section-h reveal reveal-d1">Free vs Pro</h2>
-  <p class="section-p reveal reveal-d2">Start for free. Upgrade when you're ready to go deeper.</p>
+  <p class="section-p reveal reveal-d2">Here's what's coming. Join the waitlist to get notified at launch.</p>
 
   <div class="plans-grid reveal reveal-d3">
     <div class="plan-card">
@@ -1337,7 +1528,7 @@
         <li class="yes">Place stats &amp; analytics</li>
         <li class="yes">AI-powered insights</li>
       </ul>
-      <a href="https://play.google.com/store/apps/details?id=com.zunolabs.nomly" class="btn btn-fill" style="width:100%;justify-content:center;margin-top:28px;" target="_blank" rel="noopener">Get Nomly Pro</a>
+      <a href="#waitlist" class="btn btn-fill" style="width:100%;justify-content:center;margin-top:28px;">Get early access</a>
     </div>
   </div>
 </section>
@@ -1369,6 +1560,56 @@
     </div>
   </div>
 </div>
+
+<div class="rule"></div>
+
+<!-- WAITLIST -->
+<section class="waitlist-wrap" id="waitlist">
+  <div class="waitlist-inner">
+
+    <div class="waitlist-left reveal">
+      <div class="waitlist-status">Closed Beta</div>
+      <div class="eyebrow">// early access</div>
+      <h2>Be the first<br />to eat smarter.</h2>
+      <p>Nomly is wrapping up closed beta. Drop your email and you'll be the first to know when it's live on Google Play — no spam, just a single launch email.</p>
+    </div>
+
+    <div class="waitlist-form reveal reveal-d2">
+      <span class="waitlist-form-label">// join the waitlist</span>
+
+      <div class="waitlist-success" id="waitlistSuccess">
+        <span class="waitlist-success-title">✓ You're on the list.</span>
+        <span class="waitlist-success-sub">We'll email you the moment Nomly launches.</span>
+      </div>
+
+      <form id="waitlistForm" action="https://formspree.io/f/xgonzppo" method="POST">
+        <div class="waitlist-input-row">
+          <input
+            class="waitlist-input"
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          />
+          <button class="waitlist-submit" type="submit" id="waitlistBtn">
+            Notify me
+          </button>
+        </div>
+        <p class="waitlist-note">No spam. One email when we launch. Unsubscribe anytime.</p>
+      </form>
+
+      <div class="waitlist-spots">
+        <span class="waitlist-spots-label">Beta spots filled</span>
+        <div class="waitlist-spots-bar">
+          <div class="waitlist-spots-fill" id="spotsFill"></div>
+        </div>
+        <span class="waitlist-spots-label" id="spotsLabel">…</span>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 <div class="rule"></div>
 
@@ -1412,7 +1653,7 @@
           <li><strong>Google Places API</strong> — place search and location data.</li>
           <li><strong>RevenueCat</strong> — subscription management.</li>
           <li><strong>PostHog</strong> — anonymized product analytics.</li>
-          <li><strong>Google Gemini</strong> — AI insight generation (Nomly Pro only, server-side).</li>
+          <li><strong>Google Gemini</strong> — AI insight generation (Pro only, server-side).</li>
         </ul>
 
         <h2>Security</h2>
@@ -1481,7 +1722,6 @@
           <div class="coming-soon-dots">
             <span class="cs-dot active"></span>
             <span class="cs-dot"></span>
-            <span class="cs-dot"></span>
           </div>
           <div class="coming-soon-mono">[ EXPERIMENT IN PROGRESS ]</div>
         </div>
@@ -1505,8 +1745,8 @@
     <div class="footer-links">
       <a href="#about">About</a>
       <a href="#apps">Apps</a>
-      <a href="#legal">Privacy Policy</a>
-      <a href="#legal">Terms of Service</a>
+      <a href="#legal" data-tab="privacy">Privacy Policy</a>
+      <a href="#legal" data-tab="terms">Terms of Service</a>
       <a href="mailto:zunolabs2025@gmail.com">Contact</a>
     </div>
   </footer>
@@ -1730,10 +1970,28 @@
     document.querySelectorAll('.ltab').forEach(el => el.classList.remove('on'));
     document.getElementById('pane-' + tab).classList.add('on');
     btn.classList.add('on');
+    const track    = document.getElementById('sliderTrack');
+    const viewport = track.parentElement;
+    const panels   = track.querySelectorAll('.slider-panel');
+    viewport.style.height = getPanelHeight(panels, currentPanel) + 'px';
   }
 
-  // Nav links that live inside panel 1 must first slide back before scrolling
-  document.querySelectorAll('a[href="#legal"], a[href="#apps"]').forEach(link => {
+  // Recalculate slider height on window resize
+  window.addEventListener('resize', () => {
+    const track    = document.getElementById('sliderTrack');
+    const viewport = track.parentElement;
+    const panels   = track.querySelectorAll('.slider-panel');
+    viewport.style.transition = 'none';
+    viewport.style.height = getPanelHeight(panels, currentPanel) + 'px';
+  }, { passive: true });
+  document.querySelectorAll('a[data-tab]').forEach(link => {
+    link.addEventListener('click', () => {
+      const tab = link.dataset.tab;
+      const btn = document.querySelector(`.ltab[onclick*="${tab}"]`);
+      if (tab && btn) showTab(tab, btn);
+    });
+  });
+  document.querySelectorAll('a[href="#legal"], a[href="#apps"], a[href="#waitlist"]').forEach(link => {
     link.addEventListener('click', e => {
       if (currentPanel !== 0) {
         e.preventDefault();
@@ -1744,6 +2002,66 @@
       }
     });
   });
+
+  /* ─────────────────────────────────────────
+     WAITLIST FORM + LIVE COUNTER
+     Counter: counterapi.dev/api/zunolabs/nomly-waitlist
+     Cap: 100 beta spots
+  ───────────────────────────────────────── */
+  const COUNTER_URL = 'https://counterapi.dev/api/zunolabs/nomly-waitlist';
+  const BETA_CAP    = 100;
+
+  const waitlistForm    = document.getElementById('waitlistForm');
+  const waitlistBtn     = document.getElementById('waitlistBtn');
+  const waitlistSuccess = document.getElementById('waitlistSuccess');
+  const spotsFill       = document.getElementById('spotsFill');
+  const spotsLabel      = document.getElementById('spotsLabel');
+
+  function updateSpots(count) {
+    const pct = Math.min(Math.round((count / BETA_CAP) * 100), 100);
+    spotsFill.style.width  = pct + '%';
+    spotsLabel.textContent = pct + '%';
+  }
+
+  // Read current count on page load
+  fetch(COUNTER_URL)
+    .then(r => r.json())
+    .then(d => updateSpots(d.value || 0))
+    .catch(() => updateSpots(0));
+
+  if (waitlistForm) {
+    waitlistForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      waitlistBtn.disabled = true;
+      waitlistBtn.textContent = 'Sending…';
+
+      try {
+        const res = await fetch(waitlistForm.action, {
+          method: 'POST',
+          body: new FormData(waitlistForm),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (res.ok) {
+          // Increment counter and update bar
+          fetch(COUNTER_URL + '/up')
+            .then(r => r.json())
+            .then(d => updateSpots(d.value || 0))
+            .catch(() => {});
+
+          waitlistForm.style.display = 'none';
+          waitlistSuccess.classList.add('show');
+        } else {
+          waitlistBtn.disabled = false;
+          waitlistBtn.textContent = 'Try again';
+        }
+      } catch {
+        waitlistBtn.disabled = false;
+        waitlistBtn.textContent = 'Try again';
+      }
+    });
+  }
+
   window.addEventListener('scroll', () => {
     btt.classList.toggle('visible', window.scrollY > 400);
   }, { passive: true });

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/svg+xml" href="nomly_mascot.svg" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nomly — Never forget what you ordered.</title>
+  <meta name="description" content="Nomly remembers the dishes you loved — even the ones you didn't. Join the waitlist." />
+  <meta property="og:title" content="Nomly — Your personal food memory." />
+  <meta property="og:description" content="Nomly remembers the dishes you loved — even the ones you didn't. Join the waitlist." />
+  <meta property="og:url" content="https://zunolabs-web.vercel.app/nomly" />
+  <meta property="og:image" content="https://zunolabs-web.vercel.app/nomly-og.png" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter/X card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Nomly — Never forget what you ordered." />
+  <meta name="twitter:description" content="Nomly remembers the dishes you loved — even the ones you didn't." />
+  <meta name="twitter:image" content="https://zunolabs-web.vercel.app/nomly-og.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F8F6F1;
+      --bg2:     #EFECE5;
+      --bg3:     #E5E1D8;
+      --text:    #1C1A16;
+      --text2:   #7C7870;
+      --text3:   #AEA9A0;
+      --accent:  #FF4500;
+      --accent2: #ac2e00;
+      --adim:    color-mix(in srgb, var(--accent) 10%, transparent);
+      --border:  rgba(28,26,22,0.09);
+      --border2: rgba(28,26,22,0.15);
+      --serif:   'DM Serif Display', serif;
+      --sans:    'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+    }
+
+    .nav-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--text);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; line-height: 1;
+    }
+
+    .nav-name {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--text);
+    }
+
+    .nav-tagline {
+      font-size: 12px;
+      color: var(--text2);
+      font-weight: 300;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hero-left { display: flex; flex-direction: column; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      border-radius: 100px;
+      padding: 5px 14px 5px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+      width: fit-content;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeUp 0.55s 0.05s ease forwards;
+    }
+
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.45; transform: scale(0.75); }
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(38px, 4.5vw, 62px);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp 0.55s 0.12s ease forwards;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .subline {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--text2);
+      line-height: 1.65;
+      margin-bottom: 40px;
+      max-width: 400px;
+      opacity: 0;
+      animation: fadeUp 0.55s 0.18s ease forwards;
+    }
+
+    /* ── FORM ── */
+    .form-wrap {
+      opacity: 0;
+      animation: fadeUp 0.55s 0.24s ease forwards;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .email-input {
+      flex: 1;
+      height: 50px;
+      padding: 0 18px;
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .email-input::placeholder { color: var(--text3); }
+
+    .email-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--adim);
+    }
+
+    .submit-btn {
+      height: 50px;
+      padding: 0 22px;
+      border-radius: 12px;
+      border: none;
+      background: var(--text);
+      color: var(--bg);
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.12s;
+    }
+
+    .submit-btn:hover  { background: var(--accent); }
+    .submit-btn:active { transform: scale(0.97); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .progress-track {
+      height: 4px;
+      background: var(--bg3);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 9px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 100px;
+      width: 0%;
+      transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .progress-label strong { color: var(--accent); font-weight: 500; }
+
+    .success-msg {
+      display: none;
+      padding: 16px 0;
+    }
+
+    .success-msg p {
+      font-size: 16px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .success-msg strong { color: var(--text); font-weight: 500; }
+
+    /* ── PHONE MOCKUP ── */
+    .hero-right {
+      display: flex;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.65s 0.3s ease forwards;
+    }
+
+    .phone-frame {
+      width: 260px;
+      height: 520px;
+      background: #1A1814;
+      border-radius: 40px;
+      padding: 12px;
+      box-shadow:
+        0 40px 80px rgba(28,26,22,0.18),
+        0 10px 30px rgba(28,26,22,0.1),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #0F0F0C;
+      border-radius: 30px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phone-notch {
+      width: 90px; height: 26px;
+      background: #1A1814;
+      border-radius: 0 0 16px 16px;
+      margin: 0 auto;
+      flex-shrink: 0;
+    }
+
+    .phone-content {
+      flex: 1;
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .phone-search {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 7px 11px;
+    }
+
+    .phone-map {
+      flex: 1;
+      background: #1C1F18;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-grid-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+    }
+
+    .map-road {
+      position: absolute;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+    }
+
+    .map-pin {
+      position: absolute;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      transform: translate(-50%, -50%);
+    }
+
+    .map-pin.active {
+      background: #982800;
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+    }
+
+    .map-pin.dim { background: rgba(255,255,255,0.1); }
+
+    .phone-card {
+      background: #1E1E18;
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 8px;
+    }
+
+    .card-emoji {
+      width: 32px; height: 32px;
+      background: #2A2A22;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .card-name {
+      font-size: 11px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+      font-family: var(--sans);
+      margin-bottom: 2px;
+    }
+
+    .card-place {
+      font-size: 10px;
+      color: rgba(255,255,255,0.3);
+      font-family: var(--sans);
+      font-weight: 300;
+    }
+
+    .card-mood {
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .card-actions { display: flex; gap: 6px; }
+
+    .card-btn {
+      font-size: 9px;
+      font-family: var(--sans);
+      font-weight: 500;
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 4px 10px;
+    }
+
+    .card-btn.log-again {
+      background: rgba(255, 69, 0, 0.12);
+      color: #FF4500;
+      border-color: rgba(255, 69, 0, 0.25);
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      padding: 0 24px 96px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .features-inner {
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .problem {
+      opacity: 0;
+      animation: fadeUp 0.55s ease forwards;
+      animation-play-state: paused;
+    }
+
+    .problem.in-view { animation-play-state: running; }
+
+    .problem-quote {
+      font-family: var(--serif);
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--text2);
+      margin-bottom: 20px;
+    }
+
+    .problem-quote em { color: var(--text); }
+
+    .problem-punchline {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      opacity: 0;
+      animation: fadeUp 0.55s 0.1s ease forwards;
+      animation-play-state: paused;
+    }
+
+    .bullets.in-view { animation-play-state: running; }
+
+    .bullet { display: flex; gap: 16px; align-items: flex-start; }
+
+    .bullet-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .bullet-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .bullet-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text2);
+      line-height: 1.55;
+    }
+
+    /* ── SOCIAL ── */
+    .social-strip {
+      padding: 0 24px 80px;
+      display: flex;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.55s ease forwards;
+      animation-play-state: paused;
+    }
+
+    .social-strip.in-view { animation-play-state: running; }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text2);
+      font-size: 14px;
+      border-bottom: 1px solid var(--border2);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .social-link:hover { color: var(--text); border-color: var(--text); }
+
+    .x-icon { width: 15px; height: 15px; fill: currentColor; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    footer a { color: var(--text2); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--text); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 820px) {
+      nav { padding: 18px 24px; }
+      .nav-tagline { display: none; }
+      .hero { padding: 100px 24px 60px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 56px; text-align: center; }
+      .hero-left { align-items: center; }
+      .subline { max-width: 100%; }
+      .input-row { flex-direction: column; }
+      .submit-btn { height: 50px; }
+      .hero-right { order: -1; }
+      .phone-frame { width: 220px; height: 440px; }
+      .features { padding: 0 24px 72px; }
+      .features-inner { grid-template-columns: 1fr; gap: 48px; }
+      .problem { text-align: center; }
+      footer { flex-direction: column; gap: 8px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-icon">
+      <img src="nomly_mascot.svg" alt="Nomly" style="width:22px;height:22px;object-fit:contain;" />
+    </div>
+    <span class="nav-name">Nomly</span>
+  </a>
+  <span class="nav-tagline">Your personal food memory.</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-left">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Closed Beta
+      </div>
+
+      <h1>Never forget what you <em>ordered.</em></h1>
+      <p class="subline">Nomly remembers the dishes you loved — even the ones you didn't.</p>
+
+      <div class="form-wrap">
+        <div id="formArea">
+          <div class="input-row">
+            <input
+              type="email"
+              class="email-input"
+              id="emailInput"
+              placeholder="Enter your email"
+              autocomplete="email"
+            />
+            <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+              Join waitlist
+            </button>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="spotsFill"></div>
+          </div>
+          <p class="progress-label" id="spotsLabel">Loading spots…</p>
+        </div>
+        <div class="success-msg" id="successMsg">
+          <p><strong>You're on the list. ✦</strong><br />We'll reach out when beta opens up for you.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+
+            <div class="phone-search">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span style="font-size:10px;color:rgba(255,255,255,0.25);font-family:var(--sans);font-weight:300;">Search place…</span>
+            </div>
+
+            <div class="phone-map">
+              <svg class="map-grid-svg" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" y1="33%" x2="100%" y2="33%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <line x1="0" y1="66%" x2="100%" y2="66%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <line x1="33%" y1="0" x2="33%" y2="100%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <line x1="66%" y1="0" x2="66%" y2="100%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              </svg>
+              <div class="map-road" style="width:60%;height:3px;top:33%;left:5%;transform:translateY(-50%);"></div>
+              <div class="map-road" style="width:3px;height:55%;top:10%;left:55%;"></div>
+              <div class="map-road" style="width:45%;height:3px;top:66%;left:30%;transform:translateY(-50%);"></div>
+              <div class="map-pin active" style="top:27%;left:52%;">🍜</div>
+              <div class="map-pin dim"    style="top:57%;left:22%;">🍕</div>
+              <div class="map-pin dim"    style="top:62%;left:67%;">☕</div>
+              <div class="map-pin dim"    style="top:18%;left:72%;">🍣</div>
+            </div>
+
+            <div class="phone-card">
+              <div class="card-top">
+                <div class="card-emoji">🍜</div>
+                <div style="flex:1;">
+                  <div class="card-name">Tonkotsu Ramen</div>
+                  <div class="card-place">Ramen Yushoken · Jan 2025</div>
+                </div>
+                <div class="card-mood">🤤</div>
+              </div>
+              <div class="card-actions">
+                <span class="card-btn">Details</span>
+                <span class="card-btn log-again">Log again</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-inner">
+
+    <div class="problem reveal-section">
+      <p class="problem-quote">
+        "You try a dish. Months later you order it again…<br/>
+        Only to remember you <em>didn't like it</em> last time."
+      </p>
+      <p class="problem-punchline">Nomly fixes that.</p>
+    </div>
+
+    <div class="bullets reveal-section">
+      <div class="bullet">
+        <div class="bullet-icon">🍽️</div>
+        <div>
+          <div class="bullet-title">Remember every dish</div>
+          <div class="bullet-desc">Log what you ordered and how it tasted — in seconds, right after you eat.</div>
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-icon">📍</div>
+        <div>
+          <div class="bullet-title">Places first</div>
+          <div class="bullet-desc">Browse your food history by food markers. See exactly what you've tried.</div>
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-icon">🗺️</div>
+        <div>
+          <div class="bullet-title">Your personal taste map</div>
+          <div class="bullet-desc">See where you've eaten and what you loved, laid out on a map.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="social-strip reveal-section">
+  <a href="https://x.com/ZunoLabs_" target="_blank" rel="noopener" class="social-link">
+    <svg class="x-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.892-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+    </svg>
+    Follow @ZunoLabs for updates
+  </a>
+</div>
+
+<footer>
+  <span>© 2025 ZunoLabs · <a href="https://zunolabs-web.vercel.app" target="_blank" rel="noopener">zunolabs.com</a></span>
+  <a href="https://zunolabs-web.vercel.app#legal" target="_blank">Privacy & Terms</a>
+</footer>
+
+<script>
+  const FORMSPREE  = 'https://formspree.io/f/xgonzppo';
+  const BETA_CAP   = 100;
+  let currentCount = 2; // ← update this manually as signups grow
+
+  function updateSpots(count) {
+    const pct = Math.min(Math.round(count / BETA_CAP * 100), 100);
+    document.getElementById('spotsFill').style.width = pct + '%';
+    document.getElementById('spotsLabel').innerHTML  =
+      `<strong>${pct}%</strong> of beta spots claimed`;
+  }
+
+  updateSpots(currentCount);
+
+  async function handleSubmit() {
+    const input = document.getElementById('emailInput');
+    const btn   = document.getElementById('submitBtn');
+    const email = input.value.trim();
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      input.style.borderColor = '#c0392b';
+      input.focus();
+      setTimeout(() => input.style.borderColor = '', 1400);
+      return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = 'Joining…';
+
+    try {
+      const res = await fetch(FORMSPREE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      if (res.ok) {
+        document.getElementById('formArea').style.display   = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+      } else {
+        throw new Error();
+      }
+    } catch {
+      btn.disabled    = false;
+      btn.textContent = 'Try again';
+      setTimeout(() => btn.textContent = 'Join beta', 2200);
+    }
+  }
+
+  document.getElementById('emailInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleSubmit();
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('in-view');
+        observer.unobserve(el.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal-section').forEach(el => observer.observe(el));
+
+
+</script>
+</body>
+</html>

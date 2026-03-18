@@ -551,9 +551,10 @@
       .badge { margin-left: auto; margin-right: auto; width: fit-content; }
       .subline { max-width: 100%;margin-left: auto;margin-right: auto; }
       .form-wrap { width: 100%;max-width: 420px;margin: 0 auto; }
-      .input-row { flex-direction: column;width: 100%; }
+      .input-row { display: flex; flex-direction: column; width: 100%; gap: 12px; }
       .email-input,
       .submit-btn { width: 100%; }
+      .email-input { height: 50px; min-height: 50px; line-height: 50px; padding: 0 18px; display: block; }
       .submit-btn { height: 50px; }
       .hero-right { order: -1; }
       .phone-frame { width: 220px; height: 440px; }
@@ -669,7 +670,7 @@
     <div class="problem reveal-section">
       <p class="problem-quote">
         "Have you ever <em>ordered a dish</em> and months later you order it again…<br/>
-        Only to remember you <em>didn't like it</em> the last time."
+        Only to remember you <em>didn't like it</em> the last time?"
       </p>
       <p class="problem-punchline">Nomly fixes that.</p>
     </div>
@@ -693,7 +694,7 @@
         <div class="bullet-icon">🗺️</div>
         <div>
           <div class="bullet-title">Map explorer</div>
-          <div class="bullet-desc">See where you have or haven't eaten, laid out on a map.</div>
+          <div class="bullet-desc">See where you have or haven't eaten, laid out on a map — even on the globe.</div>
         </div>
       </div>
     </div>
@@ -760,7 +761,7 @@
     } catch {
       btn.disabled    = false;
       btn.textContent = 'Try again';
-      setTimeout(() => btn.textContent = 'Join beta', 2200);
+      setTimeout(() => btn.textContent = 'Join waitlist', 2200);
     }
   }
 

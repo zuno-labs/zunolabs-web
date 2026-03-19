@@ -717,9 +717,10 @@
 </footer>
 
 <script>
-  const FORMSPREE  = 'https://formspree.io/f/xgonzppo';
-  const BETA_CAP   = 100;
-  let currentCount = 2; // ← update this manually as signups grow
+  const SUPABASE_URL = 'https://hsddbseaaastmgaykiux.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_-ryQWgJPCsQ2SqFguvCsCw_C0AhLW6K';
+  const BETA_CAP     = 100;
+  let currentCount   = 0;
 
   function updateSpots(count) {
     const pct = Math.min(Math.round(count / BETA_CAP * 100), 100);
@@ -728,7 +729,21 @@
       `<strong>${pct}%</strong> of beta spots claimed`;
   }
 
-  updateSpots(currentCount);
+  (async () => {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist?select=id&source=eq.nomly`, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'count=exact'
+        }
+      });
+      const count = parseInt(res.headers.get('content-range')?.split('/')[1] || '0');
+      currentCount = count;
+    } catch { }
+    updateSpots(currentCount);
+  })();
+
 
   async function handleSubmit() {
     const input = document.getElementById('emailInput');
@@ -746,15 +761,27 @@
     btn.textContent = 'Joining…';
 
     try {
-      const res = await fetch(FORMSPREE, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ email })
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email, source: 'nomly' })
       });
 
-      if (res.ok) {
+      if (res.status === 201) {
+        localStorage.setItem('nomly-waitlist', email);
+        currentCount++;
+        updateSpots(currentCount);
         document.getElementById('formArea').style.display   = 'none';
         document.getElementById('successMsg').style.display = 'block';
+      } else if (res.status === 409) {
+        btn.disabled    = false;
+        btn.textContent = 'Join waitlist';
+        alert('This email is already on the waitlist!');
       } else {
         throw new Error();
       }
